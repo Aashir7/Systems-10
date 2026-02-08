@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Systems 10 — Scale TikTok Shop to 6 Figures</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06080e;
+  --surface:#0c1019;
+  --surface-2:#121824;
+  --border:#1c2333;
+  --text:#f0f2f7;
+  --text-dim:#8b92a8;
+  --accent:#e63946;
+  --accent-dim:#c52f3b;
+  --glow:rgba(230,57,70,.08);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Noise overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat:repeat;opacity:.4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+a{color:inherit;text-decoration:none}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.25rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,8,14,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  transition:all .3s;
+}
+.nav-logo{
+  font-family:'Instrument Serif',serif;font-size:1.5rem;letter-spacing:-.02em;
+  display:flex;align-items:center;gap:.5rem;
+}
+.nav-logo span{
+  background:var(--accent);color:var(--bg);
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  padding:.2rem .5rem;border-radius:3px;letter-spacing:.08em;
+}
+.nav-links{display:flex;gap:2.5rem;align-items:center}
+.nav-links a{font-size:.85rem;color:var(--text-dim);transition:color .2s;letter-spacing:.02em}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  background:var(--accent);color:var(--bg);
+  font-weight:600;font-size:.8rem;letter-spacing:.04em;
+  padding:.65rem 1.5rem;border-radius:6px;
+  transition:all .25s;cursor:pointer;border:none;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(230,57,70,.2)}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8rem 2rem 6rem;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;
+  background:radial-gradient(ellipse,rgba(230,57,70,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  padding:.5rem 1.2rem;border-radius:100px;margin-bottom:2.5rem;
+  font-size:.78rem;color:var(--text-dim);letter-spacing:.03em;
+  animation:fadeUp .8s ease both;
+}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(3rem,8vw,6.5rem);
+  line-height:1;letter-spacing:-.03em;
+  max-width:900px;margin-bottom:1.5rem;
+  animation:fadeUp .8s ease .1s both;
+}
+.hero h1 em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--accent),#ff6b7a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.2rem);color:var(--text-dim);
+  max-width:580px;line-height:1.7;margin-bottom:3rem;
+  animation:fadeUp .8s ease .2s both;
+}
+.hero-actions{
+  display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .8s ease .3s both;
+}
+.btn-primary{
+  background:var(--accent);color:var(--bg);
+  font-weight:700;font-size:.95rem;letter-spacing:.02em;
+  padding:1rem 2.5rem;border-radius:8px;
+  transition:all .3s;cursor:pointer;border:none;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(230,57,70,.25)}
+.btn-ghost{
+  color:var(--text-dim);font-size:.9rem;
+  padding:1rem 1.5rem;transition:color .2s;cursor:pointer;
+  background:none;border:none;font-family:'DM Sans',sans-serif;
+}
+.btn-ghost:hover{color:var(--text)}
+
+.hero-stats{
+  display:flex;gap:4rem;margin-top:5rem;
+  animation:fadeUp .8s ease .5s both;
+}
+.hero-stat{text-align:center}
+.hero-stat .num{
+  font-family:'Instrument Serif',serif;font-size:2.5rem;
+  background:linear-gradient(135deg,var(--accent),#ff6b7a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-stat .label{font-size:.75rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-top:.25rem}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── MARQUEE ─── */
+.marquee-section{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:1.2rem 0;overflow:hidden;
+}
+.marquee-track{
+  display:flex;gap:3rem;
+  animation:marquee 20s linear infinite;
+  width:max-content;
+}
+.marquee-item{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;color:var(--text-dim);
+  letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;display:flex;align-items:center;gap:1rem;
+}
+.marquee-item::after{content:'◆';color:var(--accent);font-size:.5rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── SECTIONS ─── */
+section{padding:7rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1rem;
+}
+.section-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,5vw,3.5rem);
+  line-height:1.1;letter-spacing:-.02em;
+  margin-bottom:1.5rem;
+}
+.section-desc{color:var(--text-dim);max-width:550px;line-height:1.7;font-size:1.05rem}
+
+/* ─── WHAT YOU GET ─── */
+.features-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;margin-top:3.5rem;
+}
+.feature-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:2.2rem;
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.feature-card:hover{border-color:rgba(230,57,70,.15);transform:translateY(-4px)}
+.feature-card:hover::before{opacity:1}
+
+.feature-icon{
+  width:48px;height:48px;
+  background:var(--glow);border:1px solid rgba(230,57,70,.12);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:1.5rem;
+}
+.feature-card h3{font-size:1.15rem;font-weight:600;margin-bottom:.75rem;letter-spacing:-.01em}
+.feature-card p{color:var(--text-dim);font-size:.9rem;line-height:1.65}
+
+/* ─── HOW IT WORKS ─── */
+.steps{margin-top:3.5rem;display:flex;flex-direction:column;gap:0}
+.step{
+  display:grid;grid-template-columns:80px 1fr;gap:2rem;
+  padding:2.5rem 0;border-bottom:1px solid var(--border);
+  align-items:start;
+}
+.step-num{
+  font-family:'Instrument Serif',serif;font-size:3rem;
+  color:var(--accent);opacity:.4;line-height:1;
+}
+.step h3{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.step p{color:var(--text-dim);font-size:.92rem;line-height:1.65}
+
+/* ─── RESULTS ─── */
+.results-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-top:3.5rem;
+}
+.result-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:2.5rem;text-align:center;
+  transition:all .3s;
+}
+.result-card:hover{border-color:rgba(230,57,70,.15)}
+.result-num{
+  font-family:'Instrument Serif',serif;font-size:3.5rem;
+  background:linear-gradient(135deg,var(--accent),#ff6b7a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.result-label{color:var(--text-dim);font-size:.85rem;margin-top:.75rem;line-height:1.5}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:1.5rem;margin-top:3.5rem;
+}
+.testimonial{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:2rem;
+}
+.testimonial-quote{
+  font-size:1rem;line-height:1.7;color:var(--text-dim);
+  font-style:italic;margin-bottom:1.5rem;
+}
+.testimonial-author{display:flex;align-items:center;gap:1rem}
+.testimonial-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#ff6b7a);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--bg);font-size:.85rem;
+}
+.testimonial-name{font-weight:600;font-size:.9rem}
+.testimonial-role{font-size:.75rem;color:var(--text-dim)}
+
+/* ─── PRICING CTA ─── */
+.pricing-section{text-align:center}
+.pricing-card{
+  max-width:560px;margin:3.5rem auto 0;
+  background:var(--surface);
+  border:1px solid rgba(230,57,70,.15);
+  border-radius:16px;padding:3rem;
+  position:relative;overflow:hidden;
+}
+.pricing-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),#ff6b7a,var(--accent));
+}
+.pricing-card::after{
+  content:'';position:absolute;top:-100px;right:-100px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(230,57,70,.04),transparent 70%);
+  pointer-events:none;
+}
+.pricing-tier{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.5rem;
+}
+.pricing-amount{
+  font-family:'Instrument Serif',serif;font-size:4rem;
+  line-height:1;margin-bottom:.5rem;
+}
+.pricing-period{color:var(--text-dim);font-size:.85rem;margin-bottom:2rem}
+.pricing-features{
+  list-style:none;text-align:left;margin-bottom:2.5rem;
+  display:flex;flex-direction:column;gap:.85rem;
+}
+.pricing-features li{
+  display:flex;align-items:flex-start;gap:.75rem;
+  font-size:.92rem;color:var(--text-dim);line-height:1.5;
+}
+.pricing-features li::before{
+  content:'✓';color:var(--accent);font-weight:700;
+  flex-shrink:0;margin-top:1px;
+}
+.pricing-btn{
+  width:100%;background:var(--accent);color:var(--bg);
+  font-weight:700;font-size:1rem;
+  padding:1.1rem;border-radius:8px;
+  transition:all .3s;cursor:pointer;border:none;
+  font-family:'DM Sans',sans-serif;letter-spacing:.02em;
+}
+.pricing-btn:hover{box-shadow:0 8px 40px rgba(230,57,70,.3);transform:translateY(-2px)}
+
+/* ─── FAQ ─── */
+.faq-list{margin-top:3.5rem;max-width:700px}
+.faq-item{border-bottom:1px solid var(--border);padding:1.5rem 0}
+.faq-q{
+  font-weight:600;font-size:1.05rem;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.faq-q::after{content:'+';color:var(--accent);font-size:1.3rem;transition:transform .3s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{
+  color:var(--text-dim);font-size:.9rem;line-height:1.7;
+  max-height:0;overflow:hidden;transition:all .4s;padding-top:0;
+}
+.faq-item.open .faq-a{max-height:200px;padding-top:1rem}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  padding:3rem 2rem;text-align:center;
+}
+footer p{color:var(--text-dim);font-size:.8rem}
+footer .footer-logo{
+  font-family:'Instrument Serif',serif;font-size:1.3rem;
+  margin-bottom:1rem;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  nav{padding:1rem 1.25rem}
+  .nav-links{display:none}
+  .hero{padding:7rem 1.5rem 4rem}
+  .hero-stats{gap:2rem;flex-wrap:wrap;justify-content:center}
+  .features-grid{grid-template-columns:1fr}
+  .results-grid{grid-template-columns:1fr}
+  .step{grid-template-columns:50px 1fr;gap:1.25rem}
+  .testimonials-grid{grid-template-columns:1fr}
+  .pricing-card{padding:2rem}
+  .pricing-amount{font-size:3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Systems 10 <span>BETA</span></div>
+  <div class="nav-links">
+    <a href="#features">What You Get</a>
+    <a href="#process">How It Works</a>
+    <a href="#results">Results</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">JOIN NOW</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> Limited spots — First cohort now open</div>
+  <h1>Turn TikTok Shop into a <em>6-Figure Machine</em></h1>
+  <p class="hero-sub">The mentorship program for creators and operators who want the exact systems to scale brands past 6 figures in GMV — predictably and repeatedly.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Get Instant Access</button>
+    <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See what's inside ↓</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">6+</div><div class="label">Figures in GMV</div></div>
+    <div class="hero-stat"><div class="num">10</div><div class="label">Core Systems</div></div>
+    <div class="hero-stat"><div class="num">1:1</div><div class="label">Direct Access</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Product Selection</span>
+    <span class="marquee-item">Content Pipelines</span>
+    <span class="marquee-item">Ad Scaling</span>
+    <span class="marquee-item">Affiliate Leverage</span>
+    <span class="marquee-item">Team Automation</span>
+    <span class="marquee-item">GMV Max Framework</span>
+    <span class="marquee-item">Brand Deals</span>
+    <span class="marquee-item">Funnel Templates</span>
+    <span class="marquee-item">Campaign Reviews</span>
+    <span class="marquee-item">Strategy Calls</span>
+    <span class="marquee-item">Product Selection</span>
+    <span class="marquee-item">Content Pipelines</span>
+    <span class="marquee-item">Ad Scaling</span>
+    <span class="marquee-item">Affiliate Leverage</span>
+    <span class="marquee-item">Team Automation</span>
+    <span class="marquee-item">GMV Max Framework</span>
+    <span class="marquee-item">Brand Deals</span>
+    <span class="marquee-item">Funnel Templates</span>
+    <span class="marquee-item">Campaign Reviews</span>
+    <span class="marquee-item">Strategy Calls</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">// What You Get</div>
+    <div class="section-title">Everything you need to<br>scale on TikTok Shop</div>
+    <p class="section-desc">No fluff. No theory. Just the exact playbooks, templates, and systems I use every day to generate revenue for brands.</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎥</div>
+        <h3>Private Loom Library</h3>
+        <p>Full access to ad breakdowns, systems setup walkthroughs, and brand deal negotiations — recorded over-the-shoulder so you see exactly how it's done.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>GMV Max Framework</h3>
+        <p>The exact framework for taking 5–10% of the revenue you generate for brands. Learn to position, pitch, and close deals that pay you based on performance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Copy-Paste Templates</h3>
+        <p>Step-by-step templates and funnels you can deploy instantly — from content calendars and outreach scripts to ad creatives and affiliate onboarding flows.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>1-on-1 Strategy Access</h3>
+        <p>Direct access for strategy calls and campaign reviews. Get personalized feedback on your brands, your content, and your scaling roadmap.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>Systems & Automation</h3>
+        <p>Build the operational backbone — from content pipelines and team workflows to automated fulfillment and affiliate management that runs without you.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Ad Scaling Playbook</h3>
+        <p>Master TikTok ads from first dollar to full scale. Learn creative testing frameworks, audience targeting, and budget allocation that maximizes ROAS.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="process" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">// How It Works</div>
+    <div class="section-title">From zero to scaled<br>in 4 phases</div>
+    
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Foundation & Product Selection</h3>
+          <p>Learn how to identify winning products, evaluate market demand, and position brands for maximum revenue potential on TikTok Shop.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Content Pipeline Setup</h3>
+          <p>Build a repeatable content machine — from scripting and filming frameworks to posting schedules and creator management systems.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Ads & Affiliate Leverage</h3>
+          <p>Scale with TikTok ads and affiliates simultaneously. Deploy proven ad structures while building an affiliate army that sells for you 24/7.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Automate & Multiply</h3>
+          <p>Systematize everything so the business runs without you. Hire, delegate, and automate — then repeat across new brands.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container" style="text-align:center">
+    <div class="section-label">// The Numbers</div>
+    <div class="section-title" style="margin-left:auto;margin-right:auto">Built on real results,<br>not promises</div>
+    
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-num">$100K+</div>
+        <div class="result-label">GMV generated using these exact systems</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">5-10%</div>
+        <div class="result-label">Revenue share you can earn per brand deal</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">10</div>
+        <div class="result-label">Battle-tested systems you'll install into your business</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">// Early Access</div>
+    <div class="section-title">What members are saying</div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p class="testimonial-quote">"The Loom library alone was worth the investment. I could see exactly how campaigns were set up, not just hear about it in theory."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">M</div>
+          <div>
+            <div class="testimonial-name">Early Member</div>
+            <div class="testimonial-role">TikTok Shop Operator</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"I went from zero TikTok Shop experience to managing two brand accounts in under a month. The templates made it plug and play."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">J</div>
+          <div>
+            <div class="testimonial-name">Early Member</div>
+            <div class="testimonial-role">Content Creator</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"The 1-on-1 access is a game changer. Having someone review my actual campaigns and give feedback saved me weeks of trial and error."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div>
+            <div class="testimonial-name">Early Member</div>
+            <div class="testimonial-role">Brand Operator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing-section">
+  <div class="container">
+    <div class="section-label">// Get Started</div>
+    <div class="section-title">One program. Everything included.</div>
+    
+    <div class="pricing-card">
+      <div class="pricing-tier">Systems 10 — Full Access</div>
+      <div class="pricing-amount">$997</div>
+      <div class="pricing-period">One-time investment · Lifetime access</div>
+      <ul class="pricing-features">
+        <li>Complete private Loom library — ad breakdowns, system setups, brand deals</li>
+        <li>The GMV Max Framework — earn 5–10% of revenue you generate</li>
+        <li>Step-by-step templates & funnels — copy and deploy instantly</li>
+        <li>1-on-1 strategy calls & campaign reviews</li>
+        <li>Ad scaling playbook & affiliate leverage systems</li>
+        <li>Team automation & operational SOPs</li>
+        <li>Access to all future updates and new content</li>
+      </ul>
+      <button class="pricing-btn">Join Systems 10 Now →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label">// FAQ</div>
+    <div class="section-title">Common questions</div>
+    
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Who is this for?</div>
+        <div class="faq-a">Systems 10 is built for creators, operators, and entrepreneurs who want to build a real income stream through TikTok Shop — whether you're starting from zero or already running campaigns and want to scale.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need TikTok Shop experience?</div>
+        <div class="faq-a">No. The program is designed to take you from zero to operating profitably. Every system, template, and walkthrough starts from the fundamentals.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the GMV Max Framework?</div>
+        <div class="faq-a">It's the model I use to partner with brands and take a percentage (5–10%) of the gross merchandise volume I help them generate through TikTok Shop. You'll learn how to pitch, close, and deliver on these deals.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do the 1-on-1 calls work?</div>
+        <div class="faq-a">You get direct access for strategy calls and campaign reviews. Book time, share your campaigns or questions, and get personalized feedback and next steps.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is there a refund policy?</div>
+        <div class="faq-a">Due to the nature of digital products and immediate access to the full library, all sales are final. We're confident in the value — but reach out if you have questions before purchasing.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="text-align:center;padding:6rem 2rem 7rem">
+  <div class="container">
+    <div class="section-title" style="margin-bottom:1.5rem">Ready to build your<br><em style="font-style:italic;background:linear-gradient(135deg,var(--accent),#ff6b7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent">income machine?</em></div>
+    <p class="section-desc" style="margin:0 auto 2.5rem;text-align:center">Stop guessing. Get the systems, templates, and direct support to scale TikTok Shop predictably.</p>
+    <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" style="font-size:1.05rem;padding:1.1rem 3rem">Join Systems 10 →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Systems 10</div>
+  <p>© 2026 Systems 10. All rights reserved.</p>
+</footer>
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+// Scroll animations
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.feature-card,.step,.result-card,.testimonial,.pricing-card,.faq-item').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(30px)';
+  el.style.transition='all .6s ease';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
